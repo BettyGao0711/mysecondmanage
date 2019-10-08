@@ -15,8 +15,29 @@
    </el-row>
   </el-header>
   <el-container>
-    <el-aside width="200px">Aside</el-aside>
-    <el-main>Main</el-main>
+    <!-- 菜单栏 -->
+    <el-aside width="200px">
+       <el-menu
+      default-active="1"
+      class="el-menu-vertical-demo"
+      router
+     >
+      <el-submenu :index="''+index" v-for="(item,index) in menuList" :key="index">
+        <template slot="title">
+          <i class="el-icon-location"></i>
+          <span>{{item.authName}}</span>
+        </template>
+          <el-menu-item :index="subitem.path" v-for="(subitem,index) in item.children" :key="index">
+            <i class="el-icon-menu"></i>
+            <span>{{subitem.authName}}</span>
+          </el-menu-item>
+      </el-submenu>
+    </el-menu>
+    </el-aside>
+    <!-- 子路由对应的组件--路由出口 -->
+    <el-main>
+      <router-view></router-view>
+    </el-main>
   </el-container>
 </el-container>
   </div>
@@ -27,7 +48,7 @@ export default {
   name:'index',
   data(){
     return {
-
+     menuList:[]
     }
   },
   methods:{
@@ -56,6 +77,13 @@ export default {
           });          
         });
       }
+  },
+  created(){
+    //发请求获取菜单信息
+    this.$axios.get('menus').then(res=>{
+      // console.log(res)
+      this.menuList=res.data.data;
+    })
   }
 }
 </script>
@@ -92,8 +120,7 @@ export default {
   .el-main {
     background-color: #E9EEF3;
     color: #333;
-    text-align: center;
-    line-height: 160px;
+    padding-top:0;
   }
 
   .el-container {
