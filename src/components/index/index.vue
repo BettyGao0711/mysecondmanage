@@ -21,6 +21,7 @@
       default-active="1"
       class="el-menu-vertical-demo"
       router
+      unique-opened
      >
       <el-submenu :index="''+index" v-for="(item,index) in menuList" :key="index">
         <template slot="title">

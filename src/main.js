@@ -25,6 +25,11 @@ axios.interceptors.request.use(function (config) {
   return Promise.reject(error);
 });
 
+//注册面包屑组件--全局
+import bread from './components/bread/bread.vue'
+Vue.component('bread',bread)
+  
+
 //导入路由对象
 import router from './router/myrouter'
 

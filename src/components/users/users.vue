@@ -1,11 +1,12 @@
 <template>
   <div class="users">
     <!-- 面包屑 -->
-    <el-breadcrumb separator-class="el-icon-arrow-right">
+    <!-- <el-breadcrumb separator-class="el-icon-arrow-right">
       <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
       <el-breadcrumb-item>用户管理</el-breadcrumb-item>
       <el-breadcrumb-item>用户列表</el-breadcrumb-item>
-    </el-breadcrumb>
+    </el-breadcrumb> -->
+    <bread col1="用户管理" col2="用户列表"></bread>
     <!-- 输入框 -->
     <el-row>
       <el-col :span="6">
@@ -183,14 +184,11 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.users {
-  .el-breadcrumb {
-    line-height: 40px;
-    padding-left: 10px;
-    background-color: #d3dce6;
-  }
-  .el-row {
-    margin-top: 15px;
-  }
-}
+// .users {
+//   .el-breadcrumb {
+//     line-height: 40px;
+//     padding-left: 10px;
+//     background-color: #d3dce6;
+//   }
+// }
 </style>
