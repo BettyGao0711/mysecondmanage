@@ -9,6 +9,10 @@ import index from '../components/index/index.vue'
 //index嵌套路由的组件
 import users from '../components/users/users.vue'
 import roles from '../components/roles/roles.vue'
+import rights from '../components/rights/rights.vue'
+import goods from '../components/goods/goods.vue'
+import goodslist from '../components/goods/goodslist.vue'
+import add from '../components/goods/add.vue'
 
 //设置路由规则
 const routes=[
@@ -16,7 +20,13 @@ const routes=[
     {path:'/login',component:login},
     {path:'/index',component:index,meta:{isLogin:true},children:[
         {path:'/users',component:users},
-        {path:'/roles',component:roles}
+        {path:'/roles',component:roles},
+        {path:'/rights',component:rights},
+        {path:'/goods',component:goods,children:[
+            {path:'',redirect:'list'},
+            {path:'list',component:goodslist,meta:{msg:'商品列表'}},
+            {path:'add',component:add,meta:{msg:'添加商品'}},
+        ]}
     ]}
 ]
 //实例化路由对象

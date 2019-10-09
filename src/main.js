@@ -25,6 +25,11 @@ axios.interceptors.request.use(function (config) {
   return Promise.reject(error);
 });
 
+import moment from 'moment'
+Vue.filter('dataFormat',(value,pattern)=>{
+   return moment(value).format(pattern)
+})
+
 //注册面包屑组件--全局
 import bread from './components/bread/bread.vue'
 Vue.component('bread',bread)

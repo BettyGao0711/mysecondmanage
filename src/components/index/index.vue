@@ -28,7 +28,7 @@
           <i class="el-icon-location"></i>
           <span>{{item.authName}}</span>
         </template>
-          <el-menu-item :index="subitem.path" v-for="(subitem,index) in item.children" :key="index">
+          <el-menu-item :index="'/'+subitem.path" v-for="(subitem,index) in item.children" :key="index">
             <i class="el-icon-menu"></i>
             <span>{{subitem.authName}}</span>
           </el-menu-item>
@@ -114,7 +114,6 @@ export default {
   .el-aside {
     background-color: #fff;
     color: #333;
-    text-align: center;
     line-height: 200px;
   }
   
