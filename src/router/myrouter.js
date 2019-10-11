@@ -13,6 +13,7 @@ import rights from '../components/rights/rights.vue'
 import goods from '../components/goods/goods.vue'
 import goodslist from '../components/goods/goodslist.vue'
 import add from '../components/goods/add.vue'
+import params from '../components/params/params.vue'
 
 //设置路由规则
 const routes=[
@@ -24,9 +25,10 @@ const routes=[
         {path:'/rights',component:rights},
         {path:'/goods',component:goods,children:[
             {path:'',redirect:'list'},
-            {path:'list',component:goodslist,meta:{msg:'商品列表'}},
+            {name:'goodslist',path:'list',component:goodslist,meta:{msg:'商品列表'}},
             {path:'add',component:add,meta:{msg:'添加商品'}},
-        ]}
+        ]},
+        {path:'/params',component:params},
     ]}
 ]
 //实例化路由对象

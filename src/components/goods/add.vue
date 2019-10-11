@@ -60,7 +60,11 @@
       <!-- 上传图片 -->
       <el-upload
   class="upload-demo"
-  action="https://jsonplaceholder.typicode.com/posts/"
+  action="http://localhost:8888/api/private/v1/upload"
+  :headers="headers"
+  :on-success="handleSuccess"
+  :on-preview="preview"
+  :on-remove="remove"	
   multiple
   list-type="picture"
   >
@@ -68,7 +72,7 @@
 </el-upload>
     </el-tab-pane>
      <el-tab-pane label="商品内容" name="4">
-       <el-button type="primary">添加商品</el-button>
+       <el-button type="primary" @click="addGoods('ruleForm')">添加商品</el-button>
        <!-- 富文本编辑器 -->
         <quill-editor v-model="ruleForm.goods_introduce">
        </quill-editor>
@@ -104,7 +108,7 @@ export default {
       goods_weight:'',
       goods_number:'',
       goods_cat:[],
-      pic:[], //上传的图片的临时路径
+      pics:[], //上传的图片的临时路径
       //富文本编辑器双向绑定的数据--输入的内容
       goods_introduce:'',
 
@@ -133,6 +137,8 @@ export default {
      dymanicParams:[],
      //静态参数
      staticParams:[],
+     //upload设置请求头携带token
+     headers:{Authorization:localStorage.getItem('token')}
      
    }
  },
@@ -179,9 +185,107 @@ export default {
           this.$message.error('获取参数失败')
        }
        
-       
     }
+
+   },
+   //上传图片
+   //上传成功的钩子
+   handleSuccess(response, file, fileList){
+      // console.log(response,file, fileList)
+      //将上传的图片的临时路径保存到pics数组中,数组中的每个元素是对象,key是pic,值是图片的临时路径
+      if(response.meta.status==200){
+        const path=response.data.tmp_path;
+        this.ruleForm.pics.push({
+          pic:path
+        })
+        this.$message.success(response.meta.msg)
+      }else {
+        this.$message.error(response.meta.msg)
+      }
+
+   },
+   //预览图片
+   preview(file){
+      console.log(file)
+      //获取图片的url
+      const url=file.response.data.url;
+      //预览图片
+      window.open(url);
+   },
+   //删除图片
+   remove(file){
+      //删除图片了要从pics数组中对应的删除
+      //可以在数组中找到这个图片的下标,然后splice删除
+      const path=file.response.data.tmp_path;
+      const index=this.ruleForm.pics.findIndex(item=>{
+        return item.pic=path;
+      })
+      this.ruleForm.pics.splice(index,1);
+   },
+   //添加商品
+   addGoods(ruleForm){
+     //先验证整个表单
+      this.$refs[ruleForm].validate(async (valid) => {
+          if (valid) {
+            //表单验证ok
+            //发请求
+            //整理好请求的参数
+            //goods_cat要传一个字符串,不能直接更改对象里的goods_cat,因为它是和级联双向绑定的
+            //可以深拷贝一份,然后再修改
+            const obj=JSON.parse(JSON.stringify(this.ruleForm));
+            obj.goods_cat=obj.goods_cat.join();//拼接成字符串,以,隔开
+            //同时要传一个attrs--商品的参数-动态静态参数
+            //给对象添加这个属性,值从dymanicParams,staticParams中获取,用户编辑完了参数和属性,dymanicParams,staticParams中相关的属性会同步更新,因为是双向绑定的
+            //接口规定的格式:attrs:[
+                                  // {
+                                  //   "attr_id":15,
+                                  //   "attr_value":"ddd"
+                                  // }
+                                  // ]
+           const arr1=this.dymanicParams.map(item=>{
+             return {attr_id:item.attr_id,attr_value:item.attr_vals==[]?'':item.attr_vals.join()}
+           })
+           const arr2=this.staticParams.map(item=>{
+             return {attr_id:item.attr_id,attr_value:item.attr_vals}
+           })
+          //  console.log(arr1,arr2)
+          obj.attrs=[...arr1,...arr2];
+          // this.$axios.post('goods',obj).then(res=>{
+          //   console.log(res)
+          //  if(res.data.meta.status==201){
+          //    this.$message.success(res.data.meta.msg)
+          //    //跳转到商品列表页面
+          //    this.$router.push({
+          //      name:'goodslist'
+          //    })
+          //  }else {
+          //    this.$message.error(res.data.meta.msg)
+          //  }
+          // })
+          const res=await this.$axios.post('goods',obj);
+            if(res.data.meta.status==201){
+             this.$message({
+               message:res.data.meta.msg,
+               type:'success',
+               duration:1000
+             })
+             //跳转到商品列表页面
+             this.$router.push({
+               name:'goodslist'
+             })
+           }else {
+             this.$message.error(res.data.meta.msg)
+           }
+          
+          } else {
+            this.$message.error('请填写必要的商品信息')
+            return false;
+          }
+        });
    }
+
+
+
  },
  created(){
    this.$axios.get('categories',{
