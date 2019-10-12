@@ -14,6 +14,7 @@ import goods from '../components/goods/goods.vue'
 import goodslist from '../components/goods/goodslist.vue'
 import add from '../components/goods/add.vue'
 import params from '../components/params/params.vue'
+import categories from '../components/categories/categories.vue'
 
 //设置路由规则
 const routes=[
@@ -29,6 +30,7 @@ const routes=[
             {path:'add',component:add,meta:{msg:'添加商品'}},
         ]},
         {path:'/params',component:params},
+        {path:'/categories',component:categories},
     ]}
 ]
 //实例化路由对象
