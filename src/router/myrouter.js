@@ -1,5 +1,10 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
+//vue-router 3.1.x版本,路由跳转重复点击会报错(路由跳转用的是promise),可以用如下代码解决;或者换版本,用vue-router 3.0.x版本
+const originalPush = VueRouter.prototype.push
+VueRouter.prototype.push = function push(location) {
+  return originalPush.call(this, location).catch(err => err)
+}
 Vue.use(VueRouter);
 import axios from 'axios';
 
@@ -15,6 +20,7 @@ import goodslist from '../components/goods/goodslist.vue'
 import add from '../components/goods/add.vue'
 import params from '../components/params/params.vue'
 import categories from '../components/categories/categories.vue'
+import reports from '../components/reports/reports.vue'
 
 //设置路由规则
 const routes=[
@@ -31,12 +37,14 @@ const routes=[
         ]},
         {path:'/params',component:params},
         {path:'/categories',component:categories},
+        {path:'/reports',component:reports},
     ]}
 ]
 //实例化路由对象
 const router=new VueRouter({
     routes
 })
+
 
 //全局前置导航守卫
 router.beforeEach((to,from,next)=>{
